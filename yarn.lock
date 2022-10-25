@@ -210,7 +210,7 @@
   dependencies:
     "@unocss/core" "0.46.0"
 
-"@unocss/preset-uno@0.46.0":
+"@unocss/preset-uno@0.46.0", "@unocss/preset-uno@^0.46.0":
   version "0.46.0"
   resolved "https://registry.yarnpkg.com/@unocss/preset-uno/-/preset-uno-0.46.0.tgz#b48c2c33565462332239f0251d07747ced0fdee5"
   integrity sha512-eDe7xeGlom1Ym3c07INb4z0IMw/F81Iqi9X1RFF3iendLRa0gnndPj/LAmaS23etCsaQ4zIuV2kw5qle7NHBFA==
@@ -219,7 +219,7 @@
     "@unocss/preset-mini" "0.46.0"
     "@unocss/preset-wind" "0.46.0"
 
-"@unocss/preset-web-fonts@0.46.0":
+"@unocss/preset-web-fonts@0.46.0", "@unocss/preset-web-fonts@^0.46.0":
   version "0.46.0"
   resolved "https://registry.yarnpkg.com/@unocss/preset-web-fonts/-/preset-web-fonts-0.46.0.tgz#8926db0e86ebe68a74b28fb0f33faa01974d218d"
   integrity sha512-bdnaOJHJoCToZOTjymXKEZA2L9cSj8hG73HaW9T5kiIOisxfddD7Ajy0rUvvvRd9nvSupiEAeDeJGf4Ep1HIng==

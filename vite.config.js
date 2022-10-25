@@ -1,9 +1,21 @@
 // vite.config.ts
 import Unocss from 'unocss/vite'
+import presetWebFonts from '@unocss/preset-web-fonts'
+import presetUno from '@unocss/preset-uno'
 
 export default {
   plugins: [
     Unocss({ /* options */
+      presets: [
+        presetUno(),
+        presetWebFonts({
+          provider: 'google', // default provider
+          fonts: {
+            // these will extend the default theme
+            sans: 'Inter',
+          },
+        })
+      ],
       shortcuts: {
         'table-header-border': 'border border-gray-600 border-b-2 border-l-0 border-r-0 border-t-0',
         'border-top': 'border border-gray-600 border-t-2 border-l-0 border-r-0 border-b-0',

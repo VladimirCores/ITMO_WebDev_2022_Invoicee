@@ -6,31 +6,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Invoicee</title>
   </head>
-  <body>
-    <!--  based on template from https://www.figma.com/community/file/1090818534991418839  -->
-    <div id="app">
-      <div class="container mx-auto p-4 bg-red-100">
+  <body class="bg-gray-200">
+    <!--  based on template from https://www.figma.com/file/ICpj8Z11yVOgqNz7PPci9v/Invoice-ITMO-WebDev?node-id=0%3A1  -->
+    <div id="app" class="font-sans">
+      <div class="container mx-auto p-12 bg-white">
         <article class="flex flex-col">
-          <header class="flex flex-row bg-blue-100">
-            <div class="basis-1/2">#123</div>
+          <header class="flex flex-row">
+            <div class="basis-1/2">
+              <h1 class="text-[44px] text-slate-600">
+                № 123
+              </h1>
+            </div>
             <div class="basis-1/2">
               <div class="flex-col">
-                <div class="flex-row">INVOICE</div>
-                <div class="flex flex-row bg-green-200">
-                  <div class="basis-1/2">Issued</div>
-                  <div class="basis-1/2">Due</div>
+                <div class="flex-row">
+                  <h1 class="text-[44px] text-black font-bold">
+                    Invoice
+                  </h1>
                 </div>
-                <div class="flex flex-row bg-green-100">
-                  <div class="basis-1/2">From</div>
-                  <div class="basis-1/2">To</div>
+                <div class="flex flex-row mt-12">
+                  <div class="basis-1/2">
+                    <div class="flex-col">
+                      <h4 class="font-bold">Issued</h4>
+                      <p class="text-base">
+                        01 Sep, 2022
+                      </p>
+                    </div>
+                  </div>
+                  <div class="basis-1/2">
+                    <div class="flex-col">
+                      <h4 class="font-bold">Due</h4>
+                      <p class="text-base">
+                        15 Sep, 2022
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="flex flex-row mt-12">
+                  <div class="basis-1/2">
+                    <div class="flex-col">
+                      <h4 class="font-bold">From</h4>
+                      <p class="text-base">
+                        Name or Company<br>
+                        123 Godly Street<br>
+                        Internet, 198233<br>
+                        Saint-Petersburg, Russia<br>
+                      </p>
+                    </div>
+                  </div>
+                  <div class="basis-1/2">
+                    <div class="flex-col">
+                      <h4 class="font-bold">To</h4>
+                      <p class="text-base">
+                        Payer Company<br>
+                        Unknown Street, 832/6<br>
+                        Extranet TF, 99321<br>
+                        Another City, Country<br>
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </header>
-          <main class="flex flex-row">
+          <main class="flex flex-row mt-16">
             <div class="flex flex-col w-full">
               <div class="flex-row">
-                <section class="table-header-border leading-8">
+                <section class="table-header-border leading-8 font-bold">
                   <div class="grid grid-cols-8">
                     <div class="col-span-4">Item</div>
                     <div>Cost</div>
@@ -41,12 +83,12 @@
                 <div id="tableWorkItems" class="flex-col">
                 </div>
               </div>
-              <div class="flex-row mt-4">
+              <div class="flex-row mt-12">
                 <button id="btnAddWorkItem" class="w-8 h-8 text-lg rounded-full bg-gray-300 hover:bg-gray-200">+</button>
               </div>
-              <div class="flex flex-row justify-end mt-12">
-                <div class="w-50% bg-purple-100">
-                  <section class="border-top">
+              <div class="flex flex-row justify-end mt-16">
+                <div class="w-50%">
+                  <section class="border-top leading-8 pt-2">
                     <div class="flex flex-col">
                       <div class="flex flex-row justify-between">
                         <b>Subtotal</b>
@@ -58,7 +100,7 @@
                       </div>
                     </div>
                   </section>
-                  <section class="border-top mt-12">
+                  <section class="border-top mt-16 leading-8 pt-2">
                     <div class="flex flex-row justify-between">
                       <b>Total</b>
                       <p id="resultsTotal">$5600</p>
@@ -69,12 +111,12 @@
             </div>
           </main>
           <footer class="flex flex-row justify-end mt-36">
-            <section class="flex-col w-50% bg-yellow-100">
+            <section class="flex-col w-50%">
               <header class="flex flex-row justify-between">
                 <b>IBAN</b>
                 <p>KW81CBKU00000000000012345601013</p>
               </header>
-              <main class="mt-4">
+              <main class="mt-4 text-sm">
                 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
               </main>
               <footer class="mt-4">
