@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "@localsettings/prettier": {
+      "signature": "1415c0c63d3ca3a125ef846bb212dfc6",
+      "file": true
+    }
+  }
+}
