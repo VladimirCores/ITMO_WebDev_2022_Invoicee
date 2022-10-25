@@ -13,8 +13,9 @@
         <article class="flex flex-col">
           <header class="flex flex-row">
             <div class="basis-1/2">
-              <h1 class="text-[44px] text-slate-600">
-                № 123
+              <h1 class="text-[44px] text-slate-400">
+                № <input id="textInvoiceNumber" type="text" value="0" pattern="[0-9]" required
+                   class="w-32 border-b-2 focus:border-slate-500 focus:text-slate-500 focus:outline-none"/>
               </h1>
             </div>
             <div class="basis-1/2">
@@ -84,18 +85,25 @@
                 </div>
               </div>
               <div class="flex-row mt-12">
-                <button id="btnAddWorkItem" class="w-8 h-8 text-lg rounded-full bg-gray-300 hover:bg-gray-200">+</button>
+                <button id="btnAddWorkItem" class="
+                  w-8 h-8 text-lg rounded-full bg-slate-200 hover:bg-gray-300">+</button>
               </div>
               <div class="flex flex-row justify-end mt-16">
                 <div class="w-50%">
                   <section class="border-top leading-8 pt-2">
                     <div class="flex flex-col">
                       <div class="flex flex-row justify-between">
-                        <b>Subtotal</b>
+                        Subtotal
                         <p id="resultsSubtotal">$7000</p>
                       </div>
                       <div class="flex flex-row justify-between">
-                        <span><b>Discount</b> (<span id="resultsDiscountPercent">20%</span>)</span>
+                        <span>
+                          Discount (
+                            <input id="resultsDiscountPercent" type="text" value="20" pattern="[0-9]{2}" required
+                               class="w-7 border-b-2 text-slate-400 focus:text-slate-700 focus:border-slate-500 focus:outline-none"/>
+                            %
+                          )
+                        </span>
                         <p id="resultsDiscount">$1400</p>
                       </div>
                     </div>
