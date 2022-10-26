@@ -54,7 +54,7 @@ domInputInvoiceNumber.oninput = (e) => updateInvoiceParamFromEvent(e, 'id');
 domInputTaxPercent.oninput = (e) => updateInvoiceParamFromEvent(e, 'taxes').then((value) => value >= 0 && calculateResults());
 domInputDiscountPercent.oninput = (e) => updateInvoiceParamFromEvent(e, 'discount').then((value) => value >= 0 && calculateResults());
 domTableWorkItems.onclick = (e) => {
-  const targetId = parseInt(e.target.id);
+  const targetId = parseInt(e.target?.id || '');
   // console.log('> domTableWorkItems.onclick: e.target =', e.target);
   const isValidWorkItemSelected = !!targetId;
   if (isValidWorkItemSelected) {
@@ -62,6 +62,7 @@ domTableWorkItems.onclick = (e) => {
     console.log('> domTableWorkItems.onclick:', {targetId, selectedWorkItemVO, invoiceVO});
     setupPopupWorkItem(selectedWorkItemVO);
     openWorkItemPopup();
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }
 }
 domButtonAddWorkItem.onclick = (e) => {
