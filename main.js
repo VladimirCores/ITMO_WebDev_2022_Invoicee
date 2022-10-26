@@ -25,11 +25,11 @@ const domWorkItemInputCost = document.getElementById('inputWorkItemCost');
 const domWorkItemInputTitle = document.getElementById('inputWorkItemTitle');
 const domWorkItemInputDescription = document.getElementById('inputWorkItemDescription');
 
-const domButtonAddWorkItem = document.getElementById('btnAddWorkItem');
 const domWorkItemButtonDelete = document.getElementById('btnDeleteWorkItemPopup');
 const domWorkItemButtonClose = document.getElementById('btnCloseWorkItemPopup');
 
 const domTableWorkItems = document.getElementById('tableWorkItems');
+const domAddWorkItemButton = document.getElementById('btnAddWorkItem');
 
 const domResultsSubtotalContainer = document.getElementById('resultsSubtotalContainer');
 const domResultsDiscountContainer = document.getElementById('resultsDiscountContainer');
@@ -37,9 +37,13 @@ const domResultsTaxesContainer = document.getElementById('resultsTaxesContainer'
 const domResultsTotalContainer = document.getElementById('resultsTotalContainer');
 
 const invoiceVO = initializeInvoiceVO();
-let selectedWorkItemVO = WorkItemVO.fromString(localStorage.getItem(LOCAL_KEY_WORK_ITEM));
-
 calculateResults();
+
+let selectedWorkItemVO = WorkItemVO.fromString(localStorage.getItem(LOCAL_KEY_WORK_ITEM));
+if (selectedWorkItemVO) {
+  setupPopupWorkItem(selectedWorkItemVO);
+  openWorkItemPopup();
+}
 
 function initializeInvoiceVO() {
   const initialInvoiceVO = InvoiceVO.fromString(localStorage.getItem(LOCAL_KEY_INVOICE)) || new InvoiceVO();
@@ -60,12 +64,13 @@ domTableWorkItems.onclick = (e) => {
   if (isValidWorkItemSelected) {
     selectedWorkItemVO = invoiceVO.items.find((vo) => vo.id === targetId);
     console.log('> domTableWorkItems.onclick:', {targetId, selectedWorkItemVO, invoiceVO});
+    localStorage.setItem(LOCAL_KEY_WORK_ITEM, JSON.stringify(selectedWorkItemVO));
     setupPopupWorkItem(selectedWorkItemVO);
     openWorkItemPopup();
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }
 }
-domButtonAddWorkItem.onclick = (e) => {
+domAddWorkItemButton.onclick = (e) => {
   e.stopPropagation();
   setupPopupWorkItem(null);
   openWorkItemPopup();
