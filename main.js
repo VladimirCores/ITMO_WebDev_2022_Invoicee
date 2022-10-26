@@ -78,7 +78,7 @@ domWorkItemInputQty.oninput = () => {
   calculateWorkItemTotal();
   checkWorkItemPopupCreateButtonEnabled();
 }
-domWorkItemInputTitle.oninput = () => {
+domWorkItemInputTitle.oninput = domWorkItemInputDescription.oninput = () => {
   checkWorkItemPopupCreateButtonEnabled();
 }
 domWorkItemButtonCreate.onclick = () => {
