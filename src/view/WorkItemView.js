@@ -10,8 +10,9 @@ class WorkItemView {
       </div>
     `;
     this._dom.id = vo.id;
+    this._dom.style.cssText = ""
     this._dom.innerHTML = this._domText;
-    this._dom.className = 'grid grid-cols-8 select-none border-b-1 px-1 py-2 hover:bg-gray-100';
+    this._dom.className = '[&>*]:pointer-events-none grid grid-cols-8 select-none border-b-1 px-1 py-2 hover:bg-gray-100';
   }
   get dom() { return this._dom; }
 }

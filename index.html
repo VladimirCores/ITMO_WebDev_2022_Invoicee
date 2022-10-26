@@ -11,13 +11,13 @@
     <div class="font-sans" id="app">
       <div class="container relative mx-auto bg-white">
         <section class="absolute h-full w-full hidden" id="popupWorkItemContainer">
-          <div class="h-104 bg-white px-12 py-12 flex flex-col">
+          <div class="h-104 bg-white px-12 py-6 flex flex-col">
             <header class="flex flex-row justify-between">
-              <button class="text-red hover:font-bold">Delete</button>
+              <button class="text-red hover:font-bold" id="btnDeleteWorkItemPopup">Delete</button>
               <button class="text-gray hover:text-black" id="btnCloseWorkItemPopup">close</button>
             </header>
             <main class="flex flex-row justify-between mt-8">
-              <h1 class="text-4xl font-bold">Add</h1>
+              <h1 class="text-4xl font-bold" id="titleWorkItemContainer">Add</h1>
               <div class="font-bold self-end">
                 <label for="inputWorkItemQty">Qty: </label>
                 <input class="w-16 input-percentage" id="inputWorkItemQty" pattern="[0-9]{2}" required type="text"
@@ -48,7 +48,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="flex-row mt-4">
+                <div class="flex-row mt-6">
                   <div class="flex-col">
                     <div class="font-bold text-xs text-gray-600">
                       <label for="inputWorkItemDescription">Description:</label>
@@ -137,7 +137,7 @@
                   </div>
                 </section>
                 <div class="flex-col" id="tableWorkItems">
-                  <div class="hidden grid grid-cols-8 select-none border-b-1 px-1 py-2 hover:bg-gray-100" layout-template-fro-work-item>
+                  <div class="hidden [&>*]:pointer-events-none grid grid-cols-8 select-none border-b-1 px-1 py-2 hover:bg-gray-100" layout-template-fro-work-item>
                     <div class="col-span-4">Example</div>
                     <div>0</div>
                     <div>0</div>

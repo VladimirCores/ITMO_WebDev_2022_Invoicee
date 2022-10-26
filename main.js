@@ -6,10 +6,19 @@ import '@unocss/reset/tailwind.css'
 import 'uno.css'
 
 const LOCAL_KEY_INVOICE = 'invoice';
+const LOCAL_KEY_WORK_ITEM = 'workitem';
 
 const domInputInvoiceNumber = document.getElementById('inputInvoiceNumber');
 const domInputDiscountPercent = document.getElementById('inputDiscountPercent');
 const domInputTaxPercent = document.getElementById('inputTaxPercent');
+
+const domWorkItemButtonCreate = document.getElementById('btnCreateWorkItem');
+
+const domWorkItemPopup = document.getElementById('popupWorkItemContainer');
+const domWorkItemOverlay = document.getElementById('overlayWorkItemPopup');
+
+const domWorkItemTitleContainer = document.getElementById('titleWorkItemContainer');
+const domWorkItemTotalContainer = document.getElementById('workItemTotalContainer');
 
 const domWorkItemInputQty = document.getElementById('inputWorkItemQty');
 const domWorkItemInputCost = document.getElementById('inputWorkItemCost');
@@ -17,20 +26,19 @@ const domWorkItemInputTitle = document.getElementById('inputWorkItemTitle');
 const domWorkItemInputDescription = document.getElementById('inputWorkItemDescription');
 
 const domButtonAddWorkItem = document.getElementById('btnAddWorkItem');
-const domButtonCloseWorkItemPopup = document.getElementById('btnCloseWorkItemPopup');
-const domButtonCreateWorkItem = document.getElementById('btnCreateWorkItem');
+const domWorkItemButtonDelete = document.getElementById('btnDeleteWorkItemPopup');
+const domWorkItemButtonClose = document.getElementById('btnCloseWorkItemPopup');
 
 const domTableWorkItems = document.getElementById('tableWorkItems');
-const domWorkItemTotalContainer = document.getElementById('workItemTotalContainer');
+
 const domResultsSubtotalContainer = document.getElementById('resultsSubtotalContainer');
 const domResultsDiscountContainer = document.getElementById('resultsDiscountContainer');
 const domResultsTaxesContainer = document.getElementById('resultsTaxesContainer');
 const domResultsTotalContainer = document.getElementById('resultsTotalContainer');
 
-const domPopupWorkItemContainer = document.getElementById('popupWorkItemContainer');
-const domOverlayWorkItemPopup = document.getElementById('overlayWorkItemPopup');
-
 const invoiceVO = initializeInvoiceVO();
+let selectedWorkItemVO = WorkItemVO.fromString(localStorage.getItem(LOCAL_KEY_WORK_ITEM));
+
 calculateResults();
 
 function initializeInvoiceVO() {
@@ -45,45 +53,78 @@ function initializeInvoiceVO() {
 domInputInvoiceNumber.oninput = (e) => updateInvoiceParamFromEvent(e, 'id');
 domInputTaxPercent.oninput = (e) => updateInvoiceParamFromEvent(e, 'taxes').then((value) => value >= 0 && calculateResults());
 domInputDiscountPercent.oninput = (e) => updateInvoiceParamFromEvent(e, 'discount').then((value) => value >= 0 && calculateResults());
-
-domWorkItemInputCost.oninput = domWorkItemInputQty.oninput = () => {
-  calculateWorkItemTotal();
-  checkWorkItemPopupCreateButtonEnabled();
-}
-domOverlayWorkItemPopup.onclick = domButtonCloseWorkItemPopup.onclick = () => {
-  closeWorkItemPopup();
+domTableWorkItems.onclick = (e) => {
+  const targetId = parseInt(e.target.id);
+  // console.log('> domTableWorkItems.onclick: e.target =', e.target);
+  const isValidWorkItemSelected = !!targetId;
+  if (isValidWorkItemSelected) {
+    selectedWorkItemVO = invoiceVO.items.find((vo) => vo.id === targetId);
+    console.log('> domTableWorkItems.onclick:', {targetId, selectedWorkItemVO, invoiceVO});
+    setupPopupWorkItem(selectedWorkItemVO);
+    openWorkItemPopup();
+  }
 }
 domButtonAddWorkItem.onclick = (e) => {
   e.stopPropagation();
-  resetWorkItemPopup();
-  domPopupWorkItemContainer.style.display = 'block';
+  setupPopupWorkItem(null);
+  openWorkItemPopup();
 }
-domWorkItemInputTitle.oninput = () => {
-  const value = domWorkItemInputTitle.value;
-  console.log('> domInputWorkItemTitle.oninput:', { value });
+
+domWorkItemOverlay.onclick = domWorkItemButtonClose.onclick = () => {
+  closeWorkItemPopup();
+}
+domWorkItemInputCost.oninput =
+domWorkItemInputQty.oninput = () => {
+  calculateWorkItemTotal();
   checkWorkItemPopupCreateButtonEnabled();
 }
-domButtonCreateWorkItem.onclick = () => {
-  const workItemVO = new WorkItemVO(
-    Date.now(),
-    domWorkItemInputTitle.value,
-    domWorkItemInputDescription.value,
-    domWorkItemInputQty.value,
-    domWorkItemInputCost.value
-  );
-  invoiceVO.items.push(workItemVO);
-  renderWorkItemVO(workItemVO);
+domWorkItemInputTitle.oninput = () => {
+  checkWorkItemPopupCreateButtonEnabled();
+}
+domWorkItemButtonCreate.onclick = () => {
+  if (selectedWorkItemVO) {
+    selectedWorkItemVO.title = domWorkItemInputTitle.value;
+    selectedWorkItemVO.description = domWorkItemInputDescription.value;
+    selectedWorkItemVO.qty = domWorkItemInputQty.value;
+    selectedWorkItemVO.cost = domWorkItemInputCost.value;
+    const selectedWorkItemIndex = invoiceVO.items.indexOf(selectedWorkItemVO);
+    rerenderWorkItemVOAtIndex(selectedWorkItemVO, selectedWorkItemIndex);
+  } else {
+    const workItemVO = new WorkItemVO(
+      Date.now(),
+      domWorkItemInputTitle.value,
+      domWorkItemInputDescription.value,
+      domWorkItemInputQty.value,
+      domWorkItemInputCost.value
+    );
+    invoiceVO.items.push(workItemVO);
+    renderWorkItemVO(workItemVO);
+  }
   closeWorkItemPopup();
   calculateResults();
   saveInvoice();
+}
+
+function rerenderWorkItemVOAtIndex(vo, index) {
+  const previousChild = domTableWorkItems.children[index + 1]; // +1 because there is a hidden template
+  console.log('> rerenderWorkItemVOAtIndex:', {previousChild})
+  previousChild.replaceWith(new WorkItemView(vo).dom);
 }
 
 function renderWorkItemVO(vo) {
   domTableWorkItems.append(new WorkItemView(vo).dom)
 }
 
+function openWorkItemPopup() {
+  domWorkItemTitleContainer.innerText = selectedWorkItemVO ? 'Update' : "Add";
+  domWorkItemButtonCreate.innerText = selectedWorkItemVO ? 'Save' : "Create";
+  domWorkItemButtonDelete.disabled = !selectedWorkItemVO;
+  domWorkItemPopup.style.display = 'block';
+}
+
 function closeWorkItemPopup() {
-  domPopupWorkItemContainer.style.display = 'none';
+  domWorkItemPopup.style.display = 'none';
+  if (selectedWorkItemVO) selectedWorkItemVO = null;
 }
 
 function calculateWorkItemTotal() {
@@ -92,19 +133,46 @@ function calculateWorkItemTotal() {
     (parseInt(domWorkItemInputCost.value) || 0)}`;
 }
 
-function resetWorkItemPopup() {
-  domWorkItemInputQty.value = '';
-  domWorkItemInputCost.value = '';
-  domWorkItemInputTitle.value = '';
-  domWorkItemInputDescription.value = '';
+function setupPopupWorkItem(workItemVO) {
+  domWorkItemInputQty.value = workItemVO?.qty || '';
+  domWorkItemInputCost.value = workItemVO?.cost || '';
+  domWorkItemInputTitle.value = workItemVO?.title || '';
+  domWorkItemInputDescription.value = workItemVO?.description || '';
+  domWorkItemTotalContainer.innerText = workItemVO?.total || '';
   checkWorkItemPopupCreateButtonEnabled();
 }
 
 function checkWorkItemPopupCreateButtonEnabled() {
-  const titleLength = domWorkItemInputTitle.value.length;
-  const totalNumber = parseFloat(domWorkItemTotalContainer.innerText);
+  const inputWorkItemTitle = domWorkItemInputTitle.value;
+  const titleLength = inputWorkItemTitle.length;
+  const totalNumber = parseFloat(domWorkItemTotalContainer.innerText) || 0;
+
+  let isDisabled = titleLength === 0 || totalNumber === 0;
   console.log('> checkWorkItemPopupCreateButtonEnabled:', { titleLength, totalNumber })
-  domButtonCreateWorkItem.disabled = titleLength === 0 || totalNumber === 0;
+
+  if (selectedWorkItemVO) {
+    console.log('> \t selectedWorkItemVO:', {
+      selectedWorkItemVO,
+      isTotalSame: selectedWorkItemVO.total === totalNumber,
+      isTitleSame: selectedWorkItemVO.title === inputWorkItemTitle,
+      isQtySame: selectedWorkItemVO.qty === domWorkItemInputQty.value,
+      isCostSame: selectedWorkItemVO.cost === domWorkItemInputCost.value,
+      isDescriptionSame: selectedWorkItemVO.description === domWorkItemInputDescription.value
+    });
+    isDisabled = isDisabled || (
+      (
+        selectedWorkItemVO.total === totalNumber
+        && (
+            selectedWorkItemVO.qty === domWorkItemInputQty.value
+          && selectedWorkItemVO.cost === domWorkItemInputCost.value
+        )
+      )
+      && selectedWorkItemVO.title === inputWorkItemTitle
+      && selectedWorkItemVO.description === domWorkItemInputDescription.value
+    );
+  }
+  console.log('> \t result:', { result: isDisabled });
+  domWorkItemButtonCreate.disabled = isDisabled;
 }
 
 function updateInvoiceParamFromEvent(e, param) {
@@ -124,7 +192,7 @@ function calculateResults() {
   let taxes = Math.ceil(discount * invoiceVO.taxes * 0.01);
   let total = taxes + discount;
 
-  domResultsSubtotalContainer.innerText = subtotal;
+  domResultsSubtotalContainer.innerText = subtotal.toString();
   domResultsDiscountContainer.innerText = discount.toString();
   domResultsTaxesContainer.innerText = taxes.toString();
   domResultsTotalContainer.innerText = total.toString();
