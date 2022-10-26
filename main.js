@@ -11,6 +11,7 @@ const LOCAL_KEY_WORK_ITEM = 'workitem';
 const domInputInvoiceNumber = document.getElementById('inputInvoiceNumber');
 const domInputDiscountPercent = document.getElementById('inputDiscountPercent');
 const domInputTaxPercent = document.getElementById('inputTaxPercent');
+const domInputIBANNumber = document.getElementById('inputIBANNumber');
 
 const domWorkItemButtonCreate = document.getElementById('btnCreateWorkItem');
 
@@ -51,9 +52,11 @@ function initializeInvoiceVO() {
   domInputInvoiceNumber.value = initialInvoiceVO.id;
   domInputDiscountPercent.value = initialInvoiceVO.discount;
   domInputTaxPercent.value = initialInvoiceVO.taxes;
+  domInputIBANNumber.value = initialInvoiceVO.iban;
   return initialInvoiceVO;
 }
 
+domInputIBANNumber.oninput = (e) => updateInvoiceParamFromEvent(e, 'iban', false);
 domInputInvoiceNumber.oninput = (e) => updateInvoiceParamFromEvent(e, 'id');
 domInputTaxPercent.oninput = (e) => updateInvoiceParamFromEvent(e, 'taxes').then((value) => value >= 0 && calculateResults());
 domInputDiscountPercent.oninput = (e) => updateInvoiceParamFromEvent(e, 'discount').then((value) => value >= 0 && calculateResults());
@@ -193,11 +196,12 @@ function checkWorkItemPopupCreateButtonEnabled() {
   domWorkItemButtonCreate.disabled = isDisabled;
 }
 
-function updateInvoiceParamFromEvent(e, param) {
+function updateInvoiceParamFromEvent(e, param, isNumber = true, defaultValue = 0) {
   return new Promise((resolve) => {
-    const value = parseInt(e.currentTarget.value);
-    const checkedValue = !isNaN(value) ? value : 0;
-    console.log('> updateInvoiceParamFromTargetValue', { value, param })
+    const targetValue = e.currentTarget.value;
+    const value = isNumber ? parseInt(targetValue) : targetValue;
+    const checkedValue = isNumber ? (!isNaN(value) ? value : defaultValue) : targetValue;
+    console.log('> updateInvoiceParamFromTargetValue', { value, checkedValue, param })
     invoiceVO[param] = checkedValue;
     saveInvoice();
     resolve(checkedValue);

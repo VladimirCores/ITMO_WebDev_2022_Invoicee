@@ -12,7 +12,7 @@
       <div class="container relative mx-auto bg-white content-box">
         <section class="absolute top-0 h-full w-full hidden" id="popupWorkItemContainer">
           <div class="absolute top-0 h-full w-full bg-gray-500/60" id="overlayWorkItemPopup"></div>
-          <div class="relative h-104 bg-white px-12 py-6 flex flex-col">
+          <div class="relative h-104 bg-white px-12 py-6 flex flex-col" id="popupWorkItemContainerForm">
             <header class="flex flex-row justify-between">
               <button class="text-red enabled:hover:font-bold disabled:text-gray-300" id="btnDeleteWorkItemPopup">Delete</button>
               <button class="text-gray hover:text-black" id="btnCloseWorkItemPopup">close</button>
@@ -128,7 +128,7 @@
           <main class="flex flex-row mt-16">
             <div class="flex flex-col w-full">
               <div class="flex-row">
-                <section class="table-header-border font-bold text-sm pb-1">
+                <section class="table-header-border text-sm text-gray-500 font-bold pb-1">
                   <div class="grid grid-cols-8">
                     <div class="col-span-4">Item</div>
                     <div>Qty</div>
@@ -157,8 +157,7 @@
                 </div>
               </div>
               <div class="flex-row mt-12">
-                <button class="
-                  w-8 h-8 text-lg rounded-full bg-slate-200 hover:bg-gray-300" id="btnAddWorkItem">+</button>
+                <button class="w-8 h-8 text-lg rounded-full bg-slate-200 hover:bg-gray-300" id="btnAddWorkItem">+</button>
               </div>
               <div class="flex flex-row justify-end mt-16">
                 <div class="w-50%">
@@ -207,7 +206,8 @@
             <section class="flex-col w-50%">
               <header class="flex flex-row justify-between">
                 <b>IBAN</b>
-                <p>KW81CBKU00000000000012345601013</p>
+                <input class="w-78 input-percentage placeholder:text-slate-200"
+                   id="inputIBANNumber" placeholder="Up to 34 alphanumeric characters" required type="text" value=""/>
               </header>
               <main class="mt-4 text-sm text-gray-500">
                 Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.

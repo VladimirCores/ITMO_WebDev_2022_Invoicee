@@ -7,6 +7,7 @@ class InvoiceVO {
     this.discount = 0;
     this.taxes = 0;
     this.total = 0;
+    this.iban = null;
   }
 
   static fromString(inputString) {
@@ -18,6 +19,7 @@ class InvoiceVO {
       invoiceVO.discount = parsed.discount;
       invoiceVO.taxes = parsed.taxes;
       invoiceVO.total = parsed.total;
+      invoiceVO.iban = parsed.iban;
       return invoiceVO;
     }
   }
