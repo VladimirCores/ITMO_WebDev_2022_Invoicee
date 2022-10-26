@@ -9,6 +9,7 @@ export default {
       presets: [
         presetUno(),
         presetWebFonts({
+          inlineImports: true,
           provider: 'google', // default provider
           fonts: {
             // these will extend the default theme
