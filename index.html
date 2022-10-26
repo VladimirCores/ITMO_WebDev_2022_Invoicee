@@ -128,7 +128,7 @@
           <main class="flex flex-row mt-16">
             <div class="flex flex-col w-full">
               <div class="flex-row">
-                <section class="table-header-border leading-8 font-bold mb-1">
+                <section class="table-header-border font-bold">
                   <div class="grid grid-cols-8">
                     <div class="col-span-4">Item</div>
                     <div>Cost</div>
@@ -136,7 +136,14 @@
                     <div class="col-span-2 text-right">Total</div>
                   </div>
                 </section>
-                <div class="flex-col" id="tableWorkItems"></div>
+                <div class="flex-col" id="tableWorkItems">
+                  <div class="hidden grid grid-cols-8 select-none border-b-1 px-1 py-2 hover:bg-gray-100" layout-template-fro-work-item>
+                    <div class="col-span-4">Example</div>
+                    <div>0</div>
+                    <div>0</div>
+                    <div class="col-span-2 text-right">0</div>
+                  </div>
+                </div>
               </div>
               <div class="flex-row mt-12">
                 <button class="
@@ -156,7 +163,7 @@
                           <input class="w-6 input-percentage" id="inputDiscountPercent" pattern="[0-9]{2}" required type="text"
                              value="0"/>
                             %
-                          )
+                          ) <sup class="text-gray-400">floor</sup>
                         </span>
                         <span id="resultsDiscountContainer">0</span>
                       </div>
@@ -166,7 +173,7 @@
                           <input class="w-6 input-percentage" id="inputTaxPercent" pattern="[0-9]{2}" required type="text"
                               value="0"/>
                             %
-                          )
+                          ) <sup class="text-gray-400">ceil</sup>
                         </span>
                         <span id="resultsTaxesContainer">0</span>
                       </div>

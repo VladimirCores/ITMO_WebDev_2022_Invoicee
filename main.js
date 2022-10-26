@@ -42,9 +42,9 @@ function initializeInvoiceVO() {
   return initialInvoiceVO;
 }
 
-domInputTaxPercent.oninput = (e) => updateInvoiceParamFromEvent(e, 'taxes');
-domInputDiscountPercent.oninput = (e) => updateInvoiceParamFromEvent(e, 'discount');
 domInputInvoiceNumber.oninput = (e) => updateInvoiceParamFromEvent(e, 'id');
+domInputTaxPercent.oninput = (e) => updateInvoiceParamFromEvent(e, 'taxes').then((value) => value >= 0 && calculateResults());
+domInputDiscountPercent.oninput = (e) => updateInvoiceParamFromEvent(e, 'discount').then((value) => value >= 0 && calculateResults());
 
 domWorkItemInputCost.oninput = domWorkItemInputQty.oninput = () => {
   calculateWorkItemTotal();
@@ -108,10 +108,14 @@ function checkWorkItemPopupCreateButtonEnabled() {
 }
 
 function updateInvoiceParamFromEvent(e, param) {
-  const value = e.currentTarget.value;
-  console.log('> updateInvoiceParamFromTargetValue', {value, param})
-  invoiceVO[param] = parseInt(value);
-  saveInvoice();
+  return new Promise((resolve) => {
+    const value = parseInt(e.currentTarget.value);
+    const checkedValue = !isNaN(value) ? value : 0;
+    console.log('> updateInvoiceParamFromTargetValue', { value, param })
+    invoiceVO[param] = checkedValue;
+    saveInvoice();
+    resolve(checkedValue);
+  })
 }
 
 function calculateResults() {
@@ -127,5 +131,5 @@ function calculateResults() {
 }
 
 function saveInvoice() {
-  localStorage.setItem(LOCAL_KEY_INVOICE, JSON.stringify(invoiceVO))
+  localStorage.setItem(LOCAL_KEY_INVOICE, JSON.stringify(invoiceVO));
 }
