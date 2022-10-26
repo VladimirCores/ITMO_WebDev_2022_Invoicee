@@ -19,6 +19,7 @@ export default {
       shortcuts: {
         'table-header-border': 'border border-gray-600 border-b-2 border-l-0 border-r-0 border-t-0',
         'border-top': 'border border-gray-600 border-t-2 border-l-0 border-r-0 border-b-0',
+        'input-percentage': 'border-b-2 border-slate-100 leading-5 text-slate-400 focus:text-slate-700 focus:border-slate-500 focus:border-b-2 focus:outline-none',
       },
       theme: {
         container: {
