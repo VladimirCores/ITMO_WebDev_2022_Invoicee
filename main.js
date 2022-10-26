@@ -110,6 +110,15 @@ domWorkItemButtonCreate.onclick = () => {
   calculateResults();
   saveInvoice();
 }
+domWorkItemButtonDelete.onclick = () => {
+  if (window.confirm(`Confirm deletion of: ${selectedWorkItemVO.title}`)) {
+    const selectedWorkItemIndex = invoiceVO.items.indexOf(selectedWorkItemVO);
+    invoiceVO.items.splice(selectedWorkItemIndex, 1);
+    domTableWorkItems.children[selectedWorkItemIndex + 1].remove();
+    closeWorkItemPopup();
+    saveInvoice();
+  }
+}
 
 function rerenderWorkItemVOAtIndex(vo, index) {
   const previousChild = domTableWorkItems.children[index + 1]; // +1 because there is a hidden template
@@ -130,7 +139,10 @@ function openWorkItemPopup() {
 
 function closeWorkItemPopup() {
   domWorkItemPopup.style.display = 'none';
-  if (selectedWorkItemVO) selectedWorkItemVO = null;
+  if (selectedWorkItemVO) {
+    selectedWorkItemVO = null;
+    localStorage.removeItem(LOCAL_KEY_WORK_ITEM);
+  }
 }
 
 function calculateWorkItemTotal() {
