@@ -1,27 +1,25 @@
 import InvoiceVO from './src/model/InvoiceVO';
 import WorkItemVO from './src/model/WorkItemVO';
 import WorkItemView from './src/view/WorkItemView';
-import DOM from './src/consts/dom.js';
+import DOM from './src/consts/dom';
+import Local from './src/consts/local';
 
 import '@unocss/reset/tailwind.css'
 import 'uno.css'
-
-const LOCAL_KEY_INVOICE = 'invoice';
-const LOCAL_KEY_WORK_ITEM = 'workitem';
 
 const $ = (id) => document.getElementById(id);
 
 const invoiceVO = initializeInvoiceVO();
 calculateResults();
 
-let selectedWorkItemVO = WorkItemVO.fromString(localStorage.getItem(LOCAL_KEY_WORK_ITEM));
+let selectedWorkItemVO = WorkItemVO.fromString(localStorage.getItem(Local.KEY_WORK_ITEM));
 if (selectedWorkItemVO) {
   setupPopupWorkItem(selectedWorkItemVO);
   openWorkItemPopup();
 }
 
 function initializeInvoiceVO() {
-  const initialInvoiceVO = InvoiceVO.fromString(localStorage.getItem(LOCAL_KEY_INVOICE)) || new InvoiceVO();
+  const initialInvoiceVO = InvoiceVO.fromString(localStorage.getItem(Local.KEY_INVOICE)) || new InvoiceVO();
   initialInvoiceVO.items.forEach(renderWorkItemVO);
   $(DOM.InputInvoiceNumber).value = initialInvoiceVO.id;
   $(DOM.InputDiscountPercent).value = initialInvoiceVO.discount;
@@ -41,7 +39,7 @@ $(DOM.TableWorkItems).onclick = (e) => {
   if (isValidWorkItemSelected) {
     selectedWorkItemVO = invoiceVO.items.find((vo) => vo.id === targetId);
     console.log('> getDOM(DOM.TableWorkItems).onclick:', {targetId, selectedWorkItemVO, invoiceVO});
-    localStorage.setItem(LOCAL_KEY_WORK_ITEM, JSON.stringify(selectedWorkItemVO));
+    localStorage.setItem(Local.KEY_WORK_ITEM, JSON.stringify(selectedWorkItemVO));
     setupPopupWorkItem(selectedWorkItemVO);
     openWorkItemPopup();
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
@@ -118,7 +116,7 @@ function closeWorkItemPopup() {
   $(DOM.WorkItemPopup).style.display = 'none';
   if (selectedWorkItemVO) {
     selectedWorkItemVO = null;
-    localStorage.removeItem(LOCAL_KEY_WORK_ITEM);
+    localStorage.removeItem(Local.KEY_WORK_ITEM);
   }
 }
 
@@ -188,12 +186,12 @@ function calculateResults() {
   let taxes = Math.ceil(discount * invoiceVO.taxes * 0.01);
   let total = taxes + discount;
 
-  $(DOM.ResultsSubtotalContainer).innerText = subtotal.toString();
-  $(DOM.ResultsDiscountContainer).innerText = discount.toString();
-  $(DOM.ResultsTaxesContainer).innerText = taxes.toString();
-  $(DOM.ResultsTotalContainer).innerText = total.toString();
+  $(DOM.ResultsSubtotalContainer).innerText = `${subtotal}`;
+  $(DOM.ResultsDiscountContainer).innerText = `${discount}`;
+  $(DOM.ResultsTaxesContainer).innerText = `${taxes}`;
+  $(DOM.ResultsTotalContainer).innerText = `${total}`;
 }
 
 function saveInvoice() {
-  localStorage.setItem(LOCAL_KEY_INVOICE, JSON.stringify(invoiceVO));
+  localStorage.setItem(Local.KEY_INVOICE, JSON.stringify(invoiceVO));
 }
