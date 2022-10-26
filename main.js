@@ -1,6 +1,7 @@
 import InvoiceVO from './src/model/InvoiceVO';
 import WorkItemVO from './src/model/WorkItemVO';
 import WorkItemView from './src/view/WorkItemView';
+import DOM from './src/consts/dom.js';
 
 import '@unocss/reset/tailwind.css'
 import 'uno.css'
@@ -8,34 +9,7 @@ import 'uno.css'
 const LOCAL_KEY_INVOICE = 'invoice';
 const LOCAL_KEY_WORK_ITEM = 'workitem';
 
-const domInputInvoiceNumber = document.getElementById('inputInvoiceNumber');
-const domInputDiscountPercent = document.getElementById('inputDiscountPercent');
-const domInputTaxPercent = document.getElementById('inputTaxPercent');
-const domInputIBANNumber = document.getElementById('inputIBANNumber');
-
-const domWorkItemButtonCreate = document.getElementById('btnCreateWorkItem');
-
-const domWorkItemPopup = document.getElementById('popupWorkItemContainer');
-const domWorkItemOverlay = document.getElementById('overlayWorkItemPopup');
-
-const domWorkItemTitleContainer = document.getElementById('titleWorkItemContainer');
-const domWorkItemTotalContainer = document.getElementById('workItemTotalContainer');
-
-const domWorkItemInputQty = document.getElementById('inputWorkItemQty');
-const domWorkItemInputCost = document.getElementById('inputWorkItemCost');
-const domWorkItemInputTitle = document.getElementById('inputWorkItemTitle');
-const domWorkItemInputDescription = document.getElementById('inputWorkItemDescription');
-
-const domWorkItemButtonDelete = document.getElementById('btnDeleteWorkItemPopup');
-const domWorkItemButtonClose = document.getElementById('btnCloseWorkItemPopup');
-
-const domTableWorkItems = document.getElementById('tableWorkItems');
-const domAddWorkItemButton = document.getElementById('btnAddWorkItem');
-
-const domResultsSubtotalContainer = document.getElementById('resultsSubtotalContainer');
-const domResultsDiscountContainer = document.getElementById('resultsDiscountContainer');
-const domResultsTaxesContainer = document.getElementById('resultsTaxesContainer');
-const domResultsTotalContainer = document.getElementById('resultsTotalContainer');
+const $ = (id) => document.getElementById(id);
 
 const invoiceVO = initializeInvoiceVO();
 calculateResults();
@@ -49,62 +23,62 @@ if (selectedWorkItemVO) {
 function initializeInvoiceVO() {
   const initialInvoiceVO = InvoiceVO.fromString(localStorage.getItem(LOCAL_KEY_INVOICE)) || new InvoiceVO();
   initialInvoiceVO.items.forEach(renderWorkItemVO);
-  domInputInvoiceNumber.value = initialInvoiceVO.id;
-  domInputDiscountPercent.value = initialInvoiceVO.discount;
-  domInputTaxPercent.value = initialInvoiceVO.taxes;
-  domInputIBANNumber.value = initialInvoiceVO.iban;
+  $(DOM.InputInvoiceNumber).value = initialInvoiceVO.id;
+  $(DOM.InputDiscountPercent).value = initialInvoiceVO.discount;
+  $(DOM.InputTaxPercent).value = initialInvoiceVO.taxes;
+  $(DOM.InputIBANNumber).value = initialInvoiceVO.iban;
   return initialInvoiceVO;
 }
 
-domInputIBANNumber.oninput = (e) => updateInvoiceParamFromEvent(e, 'iban', false);
-domInputInvoiceNumber.oninput = (e) => updateInvoiceParamFromEvent(e, 'id');
-domInputTaxPercent.oninput = (e) => updateInvoiceParamFromEvent(e, 'taxes').then((value) => value >= 0 && calculateResults());
-domInputDiscountPercent.oninput = (e) => updateInvoiceParamFromEvent(e, 'discount').then((value) => value >= 0 && calculateResults());
-domTableWorkItems.onclick = (e) => {
+$(DOM.InputIBANNumber).oninput = (e) => updateInvoiceParamFromEvent(e, 'iban', false);
+$(DOM.InputInvoiceNumber).oninput = (e) => updateInvoiceParamFromEvent(e, 'id');
+$(DOM.InputTaxPercent).oninput = (e) => updateInvoiceParamFromEvent(e, 'taxes').then((value) => value >= 0 && calculateResults());
+$(DOM.InputDiscountPercent).oninput = (e) => updateInvoiceParamFromEvent(e, 'discount').then((value) => value >= 0 && calculateResults());
+$(DOM.TableWorkItems).onclick = (e) => {
   const targetId = parseInt(e.target?.id || '');
-  // console.log('> domTableWorkItems.onclick: e.target =', e.target);
+  // console.log('> getDOM(DOM.TableWorkItems).onclick: e.target =', e.target);
   const isValidWorkItemSelected = !!targetId;
   if (isValidWorkItemSelected) {
     selectedWorkItemVO = invoiceVO.items.find((vo) => vo.id === targetId);
-    console.log('> domTableWorkItems.onclick:', {targetId, selectedWorkItemVO, invoiceVO});
+    console.log('> getDOM(DOM.TableWorkItems).onclick:', {targetId, selectedWorkItemVO, invoiceVO});
     localStorage.setItem(LOCAL_KEY_WORK_ITEM, JSON.stringify(selectedWorkItemVO));
     setupPopupWorkItem(selectedWorkItemVO);
     openWorkItemPopup();
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   }
 }
-domAddWorkItemButton.onclick = (e) => {
+$(DOM.AddWorkItemButton).onclick = (e) => {
   e.stopPropagation();
   setupPopupWorkItem(null);
   openWorkItemPopup();
 }
 
-domWorkItemOverlay.onclick = domWorkItemButtonClose.onclick = () => {
+$(DOM.WorkItemOverlay).onclick = $(DOM.WorkItemButtonClose).onclick = () => {
   closeWorkItemPopup();
 }
-domWorkItemInputCost.oninput =
-domWorkItemInputQty.oninput = () => {
+$(DOM.WorkItemInputCost).oninput =
+$(DOM.WorkItemInputQty).oninput = () => {
   calculateWorkItemTotal();
   checkWorkItemPopupCreateButtonEnabled();
 }
-domWorkItemInputTitle.oninput = domWorkItemInputDescription.oninput = () => {
+$(DOM.WorkItemInputTitle).oninput = $(DOM.WorkItemInputDescription).oninput = () => {
   checkWorkItemPopupCreateButtonEnabled();
 }
-domWorkItemButtonCreate.onclick = () => {
+$(DOM.WorkItemButtonCreate).onclick = () => {
   if (selectedWorkItemVO) {
-    selectedWorkItemVO.title = domWorkItemInputTitle.value;
-    selectedWorkItemVO.description = domWorkItemInputDescription.value;
-    selectedWorkItemVO.qty = domWorkItemInputQty.value;
-    selectedWorkItemVO.cost = domWorkItemInputCost.value;
+    selectedWorkItemVO.title = $(DOM.WorkItemInputTitle).value;
+    selectedWorkItemVO.description = $(DOM.WorkItemInputDescription).value;
+    selectedWorkItemVO.qty = $(DOM.WorkItemInputQty).value;
+    selectedWorkItemVO.cost = $(DOM.WorkItemInputCost).value;
     const selectedWorkItemIndex = invoiceVO.items.indexOf(selectedWorkItemVO);
     rerenderWorkItemVOAtIndex(selectedWorkItemVO, selectedWorkItemIndex);
   } else {
     const workItemVO = new WorkItemVO(
       Date.now(),
-      domWorkItemInputTitle.value,
-      domWorkItemInputDescription.value,
-      domWorkItemInputQty.value,
-      domWorkItemInputCost.value
+      $(DOM.WorkItemInputTitle).value,
+      $(DOM.WorkItemInputDescription).value,
+      $(DOM.WorkItemInputQty).value,
+      $(DOM.WorkItemInputCost).value
     );
     invoiceVO.items.push(workItemVO);
     renderWorkItemVO(workItemVO);
@@ -113,35 +87,35 @@ domWorkItemButtonCreate.onclick = () => {
   calculateResults();
   saveInvoice();
 }
-domWorkItemButtonDelete.onclick = () => {
+$(DOM.WorkItemButtonDelete).onclick = () => {
   if (window.confirm(`Confirm deletion of: ${selectedWorkItemVO.title}`)) {
     const selectedWorkItemIndex = invoiceVO.items.indexOf(selectedWorkItemVO);
     invoiceVO.items.splice(selectedWorkItemIndex, 1);
-    domTableWorkItems.children[selectedWorkItemIndex + 1].remove();
+    $(DOM.TableWorkItems).children[selectedWorkItemIndex + 1].remove();
     closeWorkItemPopup();
     saveInvoice();
   }
 }
 
 function rerenderWorkItemVOAtIndex(vo, index) {
-  const previousChild = domTableWorkItems.children[index + 1]; // +1 because there is a hidden template
+  const previousChild = $(DOM.TableWorkItems).children[index + 1]; // +1 because there is a hidden template
   console.log('> rerenderWorkItemVOAtIndex:', {previousChild})
   previousChild.replaceWith(new WorkItemView(vo).dom);
 }
 
 function renderWorkItemVO(vo) {
-  domTableWorkItems.append(new WorkItemView(vo).dom)
+  $(DOM.TableWorkItems).append(new WorkItemView(vo).dom)
 }
 
 function openWorkItemPopup() {
-  domWorkItemTitleContainer.innerText = selectedWorkItemVO ? 'Update' : "Add";
-  domWorkItemButtonCreate.innerText = selectedWorkItemVO ? 'Save' : "Create";
-  domWorkItemButtonDelete.disabled = !selectedWorkItemVO;
-  domWorkItemPopup.style.display = 'block';
+  $(DOM.WorkItemTitleContainer).innerText = selectedWorkItemVO ? 'Update' : "Add";
+  $(DOM.WorkItemButtonCreate).innerText = selectedWorkItemVO ? 'Save' : "Create";
+  $(DOM.WorkItemButtonDelete).disabled = !selectedWorkItemVO;
+  $(DOM.WorkItemPopup).style.display = 'block';
 }
 
 function closeWorkItemPopup() {
-  domWorkItemPopup.style.display = 'none';
+  $(DOM.WorkItemPopup).style.display = 'none';
   if (selectedWorkItemVO) {
     selectedWorkItemVO = null;
     localStorage.removeItem(LOCAL_KEY_WORK_ITEM);
@@ -149,24 +123,24 @@ function closeWorkItemPopup() {
 }
 
 function calculateWorkItemTotal() {
-  domWorkItemTotalContainer.innerText = `${
-    (parseInt(domWorkItemInputQty.value) || 0) *
-    (parseInt(domWorkItemInputCost.value) || 0)}`;
+  $(DOM.WorkItemTotalContainer).innerText = `${
+    (parseInt($(DOM.WorkItemInputQty).value) || 0) *
+    (parseInt($(DOM.WorkItemInputCost).value) || 0)}`;
 }
 
 function setupPopupWorkItem(workItemVO) {
-  domWorkItemInputQty.value = workItemVO?.qty || '';
-  domWorkItemInputCost.value = workItemVO?.cost || '';
-  domWorkItemInputTitle.value = workItemVO?.title || '';
-  domWorkItemInputDescription.value = workItemVO?.description || '';
-  domWorkItemTotalContainer.innerText = workItemVO?.total || '';
+  $(DOM.WorkItemInputQty).value = workItemVO?.qty || '';
+  $(DOM.WorkItemInputCost).value = workItemVO?.cost || '';
+  $(DOM.WorkItemInputTitle).value = workItemVO?.title || '';
+  $(DOM.WorkItemInputDescription).value = workItemVO?.description || '';
+  $(DOM.WorkItemTotalContainer).innerText = workItemVO?.total || '';
   checkWorkItemPopupCreateButtonEnabled();
 }
 
 function checkWorkItemPopupCreateButtonEnabled() {
-  const inputWorkItemTitle = domWorkItemInputTitle.value;
+  const inputWorkItemTitle = $(DOM.WorkItemInputTitle).value;
   const titleLength = inputWorkItemTitle.length;
-  const totalNumber = parseFloat(domWorkItemTotalContainer.innerText) || 0;
+  const totalNumber = parseFloat($(DOM.WorkItemTotalContainer).innerText) || 0;
 
   let isDisabled = titleLength === 0 || totalNumber === 0;
   console.log('> checkWorkItemPopupCreateButtonEnabled:', { titleLength, totalNumber })
@@ -176,24 +150,24 @@ function checkWorkItemPopupCreateButtonEnabled() {
       selectedWorkItemVO,
       isTotalSame: selectedWorkItemVO.total === totalNumber,
       isTitleSame: selectedWorkItemVO.title === inputWorkItemTitle,
-      isQtySame: selectedWorkItemVO.qty === domWorkItemInputQty.value,
-      isCostSame: selectedWorkItemVO.cost === domWorkItemInputCost.value,
-      isDescriptionSame: selectedWorkItemVO.description === domWorkItemInputDescription.value
+      isQtySame: selectedWorkItemVO.qty === $(DOM.WorkItemInputQty).value,
+      isCostSame: selectedWorkItemVO.cost === $(DOM.WorkItemInputCost).value,
+      isDescriptionSame: selectedWorkItemVO.description === $(DOM.WorkItemInputDescription).value
     });
     isDisabled = isDisabled || (
       (
         selectedWorkItemVO.total === totalNumber
         && (
-            selectedWorkItemVO.qty === domWorkItemInputQty.value
-          && selectedWorkItemVO.cost === domWorkItemInputCost.value
+            selectedWorkItemVO.qty === $(DOM.WorkItemInputQty).value
+          && selectedWorkItemVO.cost === $(DOM.WorkItemInputCost).value
         )
       )
       && selectedWorkItemVO.title === inputWorkItemTitle
-      && selectedWorkItemVO.description === domWorkItemInputDescription.value
+      && selectedWorkItemVO.description === $(DOM.WorkItemInputDescription).value
     );
   }
   console.log('> \t result:', { result: isDisabled });
-  domWorkItemButtonCreate.disabled = isDisabled;
+  $(DOM.WorkItemButtonCreate).disabled = isDisabled;
 }
 
 function updateInvoiceParamFromEvent(e, param, isNumber = true, defaultValue = 0) {
@@ -214,10 +188,10 @@ function calculateResults() {
   let taxes = Math.ceil(discount * invoiceVO.taxes * 0.01);
   let total = taxes + discount;
 
-  domResultsSubtotalContainer.innerText = subtotal.toString();
-  domResultsDiscountContainer.innerText = discount.toString();
-  domResultsTaxesContainer.innerText = taxes.toString();
-  domResultsTotalContainer.innerText = total.toString();
+  $(DOM.ResultsSubtotalContainer).innerText = subtotal.toString();
+  $(DOM.ResultsDiscountContainer).innerText = discount.toString();
+  $(DOM.ResultsTaxesContainer).innerText = taxes.toString();
+  $(DOM.ResultsTotalContainer).innerText = total.toString();
 }
 
 function saveInvoice() {
