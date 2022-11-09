@@ -2,9 +2,11 @@
 import Unocss from 'unocss/vite'
 import presetWebFonts from '@unocss/preset-web-fonts'
 import presetUno from '@unocss/preset-uno'
+import removeConsole from 'vite-plugin-remove-console';
 
 export default {
   plugins: [
+    removeConsole.default(),
     Unocss({ /* options */
       presets: [
         presetUno(),
