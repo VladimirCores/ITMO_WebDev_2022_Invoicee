@@ -92,6 +92,7 @@ $(DOM.WorkItemButtonDelete).onclick = () => {
     invoiceVO.items.splice(selectedWorkItemIndex, 1);
     $(DOM.TableWorkItems).children[selectedWorkItemIndex + 1].remove();
     closeWorkItemPopup();
+    calculateResults();
     saveInvoice();
   }
 }
