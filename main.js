@@ -1,8 +1,9 @@
+import DOM from './src/consts/dom';
+import Local from './src/consts/local';
+
 import InvoiceVO from './src/model/InvoiceVO';
 import WorkItemVO from './src/model/WorkItemVO';
 import WorkItemView from './src/view/WorkItemView';
-import DOM from './src/consts/dom';
-import Local from './src/consts/local';
 
 import '@unocss/reset/tailwind.css'
 import 'uno.css'
