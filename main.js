@@ -70,7 +70,7 @@ $(DOM.WorkItemButtonCreate).onclick = () => {
     selectedWorkItemVO.description = $(DOM.WorkItemInputDescription).value;
     selectedWorkItemVO.qty = $(DOM.WorkItemInputQty).value;
     selectedWorkItemVO.cost = $(DOM.WorkItemInputCost).value;
-    rerenderWorkItemVO(selectedWorkItemVO);
+    reRenderWorkItemVO(selectedWorkItemVO);
   } else {
     const workItemVO = new WorkItemVO(
       Date.now(),
@@ -97,7 +97,7 @@ $(DOM.WorkItemButtonDelete).onclick = () => {
   }
 };
 
-function rerenderWorkItemVO(vo) {
+function reRenderWorkItemVO(vo) {
   const previousChild = $(vo.id);
   console.log('> rerenderWorkItemVOAtIndex:', { previousChild });
   previousChild.replaceWith(createWorkItemDomFromVO(vo));
