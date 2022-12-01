@@ -28,11 +28,11 @@ function initializeInvoiceVO() {
   $(DOM.InputIBANNumber).value = initialInvoiceVO.iban;
   return initialInvoiceVO;
 }
-
-$(DOM.InputIBANNumber).oninput = (e) => updateInvoiceParamFromEvent(e, 'iban', false);
-$(DOM.InputInvoiceNumber).oninput = (e) => updateInvoiceParamFromEvent(e, 'id');
-$(DOM.InputTaxPercent).oninput = (e) => updateInvoiceParamFromEvent(e, 'taxes').then((value) => value >= 0 && calculateResults());
-$(DOM.InputDiscountPercent).oninput = (e) => updateInvoiceParamFromEvent(e, 'discount').then((value) => value >= 0 && calculateResults());
+const update = updateInvoiceParamFromEvent;
+$(DOM.InputIBANNumber).oninput = (e) => update(e, 'iban', false);
+$(DOM.InputInvoiceNumber).oninput = (e) => update(e, 'id');
+$(DOM.InputTaxPercent).oninput = (e) => update(e, 'taxes').then((value) => value >= 0 && calculateResults());
+$(DOM.InputDiscountPercent).oninput = (e) => update(e, 'discount').then((value) => value >= 0 && calculateResults());
 $(DOM.TableWorkItems).onclick = (e) => {
   const targetId = parseInt(e.target?.id || '');
   console.log('> $(DOM.TableWorkItems).onclick: e.target =', e.target);
@@ -56,8 +56,7 @@ $(DOM.AddWorkItemButton).onclick = (e) => {
 $(DOM.WorkItemOverlay).onclick = $(DOM.WorkItemButtonClose).onclick = () => {
   closeWorkItemPopup();
 };
-$(DOM.WorkItemInputCost).oninput =
-  $(DOM.WorkItemInputQty).oninput = () => {
+$(DOM.WorkItemInputCost).oninput = $(DOM.WorkItemInputQty).oninput = () => {
     calculateWorkItemTotal();
     checkWorkItemPopupCreateButtonEnabled();
   };
